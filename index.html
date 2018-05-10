@@ -23,8 +23,12 @@
         text-align: center;
       }
 
-      #dicerow {
-        margin-top: 140px;
+      #button-row {
+        margin-bottom: 140px;
+      }
+      .bottom {
+        position: fixed;
+        bottom: 0px;
       }
 
 
@@ -33,9 +37,8 @@
 
     <script>
 
-
-
-      var rollNumber = 0;
+      //tracks number of rolls the player has taken
+      var rollsLeft = 3;
 
       //define dice object
       function Dice() {
@@ -81,10 +84,13 @@
 
       //triggers when user presses roll button
       function rollTurn() {
-        if(rollNumber < 3){
+        if(rollsLeft > 0){
           //updates roll number
-          rollNumber++;
-          var str = "Current roll number: " + rollNumber;
+          rollsLeft--;
+          for (i=0; i<arr.length; i++){
+            document.getElementById(`check${i}`).disabled = false;
+          }
+          var str = "Remaining rolls: " + rollsLeft;
           document.querySelector('#roll-number').innerHTML = str;
 
           //roll selected dice
@@ -92,8 +98,8 @@
             if(document.getElementById(`check${i}`).checked === true){
               arr[i].roll();
               document.getElementById(`imgDice${i}`).src = arr[i].getImg();
-              console.log(arr[i].getValue());
-              console.log(arr[i].getImg());
+              // console.log(arr[i].getValue());
+              // console.log(arr[i].getImg());
             }
           }
 
@@ -111,10 +117,27 @@
 
       }
 
+      //adds lock emoji when checkbox is checked
+      function lock(thecheckbox, text) {
+        //console.log(checkbox);
+        var checkboxvar = document.getElementById(thecheckbox);
+        if(!document.getElementById(thecheckbox).checked){
+          document.getElementById(text).innerHTML = "🔒";
+        }else {
+            document.getElementById(text).innerHTML = "";
+        }
+      }
+
+      //resets game
       function reset() {
         //resets roll number
-        document.querySelector('#roll-number').innerHTML = "Current roll number: 0";
-        rollNumber = 0;
+        document.querySelector('#roll-number').innerHTML = "Remaining rolls: 3";
+        rollsLeft = 3;
+
+        //reset locks
+        for (i=0; i<arr.length; i++){
+          document.getElementById(`lock${i}`).innerHTML = "";
+        }
 
         //resets Score
         document.querySelector('#current-score').innerHTML = "Current Score: 0"
@@ -122,10 +145,17 @@
         //resets images and checkboxes
         for (i=0; i<arr.length; i++){
           document.getElementById(`check${i}`).checked = true;
+          document.getElementById(`check${i}`).disabled = true;
           document.getElementById(`imgDice${i}`).src = "https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg";
         }
-    
+
       }
+
+      //finds players current score
+      function getScore(){
+
+      }
+      
     </script>
 
   </head>
@@ -143,20 +173,42 @@
           Reset Game
         </div>
         <div class="col-sm" id="roll-number">
-           Current roll number: 0
+           Remaining rolls: 3
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" id="button-row">
         <div class="col-sm">
           <button type="button" class="btn btn-primary" onclick="rollTurn()">Roll</button>
         </div>
         <div class="col-sm">
-          <button type="button" class="btn btn-warning" onclick="reset()">Reset</button>
+          <button type="button" class="btn btn-danger" onclick="reset()">Reset</button>
         </div>
         <div class="col-sm" id="current-score">
            Current Score: 0
         </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm"></div>
+
+        <div class="col-sm-2">
+          <p id="lock0"> </p>
+        </div>
+        <div class="col-sm-2">
+          <p id="lock1"> </p>
+        </div>
+        <div class="col-sm-2">
+          <p id="lock2"> </p>
+        </div>
+        <div class="col-sm-2">
+          <p id="lock3"> </p>
+        </div>
+        <div class="col-sm-2">
+          <p id="lock4"> </p>
+        </div>
+
+        <div class="col-sm"></div>
       </div>
 
       <div class="row" id="dicerow">
@@ -185,19 +237,34 @@
         <div class="col-sm"></div>
 
         <div class="col-sm-2">
-          <form>Reroll <input type="checkbox" checked id="check0"></form>
+          <form>
+            <label for="check0">Reroll</label>
+            <input type="checkbox" checked disabled id="check0" onchange="lock('check0', 'lock0')">
+          </form>
         </div>
         <div class="col-sm-2">
-          <form>Reroll <input type="checkbox" checked id="check1"></form>
+          <form>
+            <label for="check1">Reroll</label>
+            <input type="checkbox" checked disabled id="check1" onchange="lock('check1', 'lock1')">
+          </form>
         </div>
         <div class="col-sm-2">
-          <form>Reroll <input type="checkbox" checked id="check2"></form>
+          <form>
+            <label for="check2">Reroll</label>
+            <input type="checkbox" checked disabled id="check2" onchange="lock('check2', 'lock2')">
+          </form>
         </div>
         <div class="col-sm-2">
-          <form>Reroll <input type="checkbox" checked id="check3"></form>
+          <form>
+            <label for="check3">Reroll</label>
+            <input type="checkbox" checked disabled id="check3" onchange="lock('check3', 'lock3')">
+          </form>
         </div>
         <div class="col-sm-2">
-          <form>Reroll <input type="checkbox" checked id="check4"></form>
+          <form>
+            <label for="check4">Reroll</label>
+            <input type="checkbox" checked disabled id="check4" onchange="lock('check4', 'lock4')">
+          </form>
         </div>
 
         <div class="col-sm"></div>
@@ -205,6 +272,6 @@
 
     </div>
 
-    <h6>created by Paul Lewis</h6>
+    <h6 class="bottom">created by Paul Lewis</h6>
   </body>
 </html>
