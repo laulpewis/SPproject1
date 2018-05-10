@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dice</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style>
+      h1, h4, h6 {
+        text-align: center;
+        margin: 30px;
+      }
+
+      .col-sm, col-sm-2 {
+        text-align: center;
+      }
+
+      .row {
+        text-align: center;
+
+      }
+
+      p {
+        text-align: center;
+      }
+
+      #dicerow {
+        margin-top: 140px;
+      }
+
+
+
+    </style>
+
+    <script>
+
+
+
+      var rollNumber = 0;
+
+      //define dice object
+      function Dice() {
+        this.value = 0;
+        this.img = "https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg";
+      }
+      Dice.prototype.roll = function() {
+        this.value = Math.floor(Math.random() * 6) + 1;
+      }
+      Dice.prototype.getValue = function() {
+        return this.value;
+      }
+      //returns a string with the url for the correct image
+      //images from wikipedia commons
+      Dice.prototype.getImg = function() {
+        if(this.value === 0){
+          return this.img;
+        }else if(this.value === 1){
+          this.img = "https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg";
+          return this.img;
+        }else if(this.value === 2){
+          this.img = "https://upload.wikimedia.org/wikipedia/commons/5/5f/Dice-2-b.svg";
+          return this.img;
+        }else if(this.value === 3){
+          this.img = "https://upload.wikimedia.org/wikipedia/commons/b/b1/Dice-3-b.svg";
+          return this.img;
+        }else if(this.value === 4){
+          this.img = "https://upload.wikimedia.org/wikipedia/commons/f/fd/Dice-4-b.svg";
+          return this.img;
+        }else if(this.value === 5){
+          this.img = "https://upload.wikimedia.org/wikipedia/commons/0/08/Dice-5-b.svg";
+          return this.img;
+        }else{
+          this.img = "https://upload.wikimedia.org/wikipedia/commons/5/5a/Dice-6a-b.svg";
+          return this.img;
+        }
+      }
+
+
+
+      //create an array of dice
+      var arr = new Array(new Dice(), new Dice(), new Dice(), new Dice(), new Dice());
+
+      //triggers when user presses roll button
+      function rollTurn() {
+        if(rollNumber < 3){
+          //updates roll number
+          rollNumber++;
+          var str = "Current roll number: " + rollNumber;
+          document.querySelector('#roll-number').innerHTML = str;
+
+          //roll selected dice
+          for (i=0; i<arr.length; i++){
+            if(document.getElementById(`check${i}`).checked === true){
+              arr[i].roll();
+              document.getElementById(`imgDice${i}`).src = arr[i].getImg();
+              console.log(arr[i].getValue());
+              console.log(arr[i].getImg());
+            }
+          }
+
+          //update score
+
+
+          //play a dice sound
+
+
+        }
+        //alerts user that they cannot roll again
+        else{
+          alert("No more rolls!");
+        }
+
+      }
+
+      function reset() {
+        //resets roll number
+        document.querySelector('#roll-number').innerHTML = "Current roll number: 0";
+        rollNumber = 0;
+
+        //resets Score
+        document.querySelector('#current-score').innerHTML = "Current Score: 0"
+
+        //resets images and checkboxes
+        for (i=0; i<arr.length; i++){
+          document.getElementById(`check${i}`).checked = true;
+          document.getElementById(`imgDice${i}`).src = "https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg";
+        }
+    
+      }
+    </script>
+
+  </head>
+  <body>
+    <h1>Senior Project application #1: Wisconsin Bar Dice game</h1>
+    <h4 style="color:red">(put a summary of the game here later)</h2>
+
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col-sm">
+          Roll Selected Dice
+        </div>
+        <div class="col-sm">
+          Reset Game
+        </div>
+        <div class="col-sm" id="roll-number">
+           Current roll number: 0
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          <button type="button" class="btn btn-primary" onclick="rollTurn()">Roll</button>
+        </div>
+        <div class="col-sm">
+          <button type="button" class="btn btn-warning" onclick="reset()">Reset</button>
+        </div>
+        <div class="col-sm" id="current-score">
+           Current Score: 0
+        </div>
+      </div>
+
+      <div class="row" id="dicerow">
+        <div class="col-sm"></div>
+
+        <div class="col-sm-2">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg" width="70px" id="imgDice0">
+        </div>
+        <div class="col-sm-2">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg" width="70px" id="imgDice1">
+        </div>
+        <div class="col-sm-2">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg" width="70px" id="imgDice2">
+        </div>
+        <div class="col-sm-2">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg" width="70px" id="imgDice3">
+        </div>
+        <div class="col-sm-2">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg" width="70px" id="imgDice4">
+        </div>
+
+        <div class="col-sm"></div>
+      </div>
+
+      <div class="row" id="checkrow">
+        <div class="col-sm"></div>
+
+        <div class="col-sm-2">
+          <form>Reroll <input type="checkbox" checked id="check0"></form>
+        </div>
+        <div class="col-sm-2">
+          <form>Reroll <input type="checkbox" checked id="check1"></form>
+        </div>
+        <div class="col-sm-2">
+          <form>Reroll <input type="checkbox" checked id="check2"></form>
+        </div>
+        <div class="col-sm-2">
+          <form>Reroll <input type="checkbox" checked id="check3"></form>
+        </div>
+        <div class="col-sm-2">
+          <form>Reroll <input type="checkbox" checked id="check4"></form>
+        </div>
+
+        <div class="col-sm"></div>
+      </div>
+
+    </div>
+
+    <h6>created by Paul Lewis</h6>
+  </body>
+</html>
