@@ -18,20 +18,38 @@
         text-align: center;
 
       }
-
+      ul {
+        text-align: left;
+      }
       p {
         text-align: center;
+        font-size: 28px;
+        font-weight: bold;
       }
-
+      fieldset, .container-fluid{
+        margin: 10px;
+        background-color: lightgrey;
+        border-radius: 10px;
+      }
       #button-row {
-        margin-bottom: 140px;
+        margin-bottom: 5px;
       }
       .bottom {
         position: fixed;
         bottom: 0px;
       }
-
-
+      body {
+          background-color: lightblue;
+      }
+      .container-fluid {
+        width: 80%;
+        margin: auto;
+      }
+      img {
+        /* because I was too lazy to find white dice instead of tranparent ones*/
+        background-color: white;
+        border-radius: 10px;
+      }
 
     </style>
 
@@ -103,6 +121,15 @@
             }
           }
 
+          //locks all dice
+          if(rollsLeft === 0){
+            for(i=0; i<arr.length; i++){
+              document.getElementById(`check${i}`).checked = false;
+              document.getElementById(`check${i}`).disabled = true;
+              lock(`check${i}`, `lock${i}`);
+            }
+          }
+
           //update score
 
 
@@ -136,11 +163,11 @@
 
         //reset locks
         for (i=0; i<arr.length; i++){
-          document.getElementById(`lock${i}`).innerHTML = "";
+          document.getElementById(`lock${i}`).innerHTML = "_";
         }
 
         //resets Score
-        document.querySelector('#current-score').innerHTML = "Current Score: 0"
+        document.querySelector('#current-score').innerHTML = "Current Score: ___"
 
         //resets images and checkboxes
         for (i=0; i<arr.length; i++){
@@ -155,13 +182,26 @@
       function getScore(){
 
       }
-      
+
     </script>
 
   </head>
   <body>
     <h1>Senior Project application #1: Wisconsin Bar Dice game</h1>
-    <h4 style="color:red">(put a summary of the game here later)</h2>
+
+
+    <fieldset>
+      <p>Rules:</p>
+      <hr>
+      <ul>
+        <li>Each player takes 3 turns rolling the dice</li>
+        <li>After each turn the player can decide which dice they would like reroll by using the checkboxes below</li>
+        <li>The object of the game is to have the highest score after 3 turns</li>
+        <li>5 of a kind is best, followed by 4 of a kind, then 3 of a kind and so on </li>
+        <li>For equal sized sets of dice, the set of dice with the higher value wins (e.g. 4 3's would beat 4 2's)</li>
+        <li>1's are wild meaning they can be used as any number</li>
+      </ul>
+    </fieldset>
 
     <div class="container-fluid">
 
@@ -185,7 +225,7 @@
           <button type="button" class="btn btn-danger" onclick="reset()">Reset</button>
         </div>
         <div class="col-sm" id="current-score">
-           Current Score: 0
+           Current Score: ___
         </div>
       </div>
 
@@ -193,19 +233,19 @@
         <div class="col-sm"></div>
 
         <div class="col-sm-2">
-          <p id="lock0"> </p>
+          <p id="lock0">_</p>
         </div>
         <div class="col-sm-2">
-          <p id="lock1"> </p>
+          <p id="lock1">_</p>
         </div>
         <div class="col-sm-2">
-          <p id="lock2"> </p>
+          <p id="lock2">_</p>
         </div>
         <div class="col-sm-2">
-          <p id="lock3"> </p>
+          <p id="lock3">_</p>
         </div>
         <div class="col-sm-2">
-          <p id="lock4"> </p>
+          <p id="lock4">_</p>
         </div>
 
         <div class="col-sm"></div>
