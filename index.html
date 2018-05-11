@@ -23,7 +23,7 @@
       }
       p {
         text-align: center;
-        font-size: 28px;
+        font-size: 14px;
         font-weight: bold;
       }
       fieldset, .container-fluid{
@@ -49,6 +49,9 @@
         /* because I was too lazy to find white dice instead of tranparent ones*/
         background-color: white;
         border-radius: 10px;
+      }
+      #rules {
+        font-size: 30px;
       }
 
     </style>
@@ -151,7 +154,7 @@
         if(!document.getElementById(thecheckbox).checked){
           document.getElementById(text).innerHTML = "🔒";
         }else {
-            document.getElementById(text).innerHTML = "";
+            document.getElementById(text).innerHTML = "_";
         }
       }
 
@@ -191,7 +194,7 @@
 
 
     <fieldset>
-      <p>Rules:</p>
+      <p id="rules">Rules:</p>
       <hr>
       <ul>
         <li>Each player takes 3 turns rolling the dice</li>
