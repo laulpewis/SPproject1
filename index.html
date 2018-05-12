@@ -134,7 +134,8 @@
           }
 
           //update score
-
+          // console.log(getScore());
+          document.getElementById('current-score').innerHTML = getScore();
 
           //play a dice sound
 
@@ -183,7 +184,46 @@
 
       //finds players current score
       function getScore(){
+        var score = "";
 
+        var diceValue = 6;
+        var numOfKind = 0;
+
+        var nonWilds = new Array();
+
+        for(i=0;i<arr.length;i++){
+          if(arr[i].getValue() === 1){
+            numOfKind++;
+          }
+          else{
+            nonWilds.push(arr[i].getValue());
+          }
+        }
+
+        //counts appearances of each dice value
+        var dict = {
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+          6: 0
+        }
+        for(i=0;i<nonWilds.length;i++){
+          dict[nonWilds[i]]++;
+        }
+
+        var max = 6;
+        //loops through dictionary to find dice value that appears most
+        for(i=6;i>1;i--){
+          if(dict[i] > dict[max]){
+            max = i;
+          }
+        }
+        diceValue = max;
+        numOfKind += dict[max];
+
+        score = `${numOfKind} of a kind ${diceValue}s`
+        return score;
       }
 
     </script>
