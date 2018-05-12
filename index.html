@@ -53,7 +53,9 @@
       #rules {
         font-size: 30px;
       }
-
+      #current-score {
+        font-size: 30px;
+      }
     </style>
 
     <script>
@@ -98,8 +100,6 @@
         }
       }
 
-
-
       //create an array of dice
       var arr = new Array(new Dice(), new Dice(), new Dice(), new Dice(), new Dice());
 
@@ -131,14 +131,18 @@
               document.getElementById(`check${i}`).disabled = true;
               lock(`check${i}`, `lock${i}`);
             }
+            document.getElementById('current-score').innerHTML = `Final Score: ${getScore()}`;
+            document.getElementById('rollButton').disabled = true;
+            document.getElementById('finishButton').disabled = true;
           }
 
-          //update score
-          // console.log(getScore());
-          document.getElementById('current-score').innerHTML = getScore();
+          else{
+            document.getElementById('current-score').innerHTML = `Current Score: ${getScore()}`;
+          }
 
-          //play a dice sound
-
+          if(rollsLeft === 2){
+              document.getElementById('finishButton').disabled = false;
+          }
 
         }
         //alerts user that they cannot roll again
@@ -153,9 +157,30 @@
         //console.log(checkbox);
         var checkboxvar = document.getElementById(thecheckbox);
         if(!document.getElementById(thecheckbox).checked){
+          //document.getElementById(text).html("<i class='glyphicon glyphicon-search'></i>");
           document.getElementById(text).innerHTML = "🔒";
         }else {
             document.getElementById(text).innerHTML = "_";
+        }
+      }
+
+      function finish() {
+        if(rollsLeft !== 3){
+          rollsLeft = 0;
+
+          var str = "Remaining rolls: " + rollsLeft;
+          document.querySelector('#roll-number').innerHTML = str;
+
+          for(i=0; i<arr.length; i++){
+            document.getElementById(`check${i}`).checked = false;
+            document.getElementById(`check${i}`).disabled = true;
+            lock(`check${i}`, `lock${i}`);
+          }
+
+          document.getElementById('rollButton').disabled = true;
+          document.getElementById('finishButton').disabled = true;
+
+          document.getElementById('current-score').innerHTML = `Final Score: ${getScore()}`;
         }
       }
 
@@ -169,6 +194,9 @@
         for (i=0; i<arr.length; i++){
           document.getElementById(`lock${i}`).innerHTML = "_";
         }
+
+        //reset buttons
+        document.getElementById('rollButton').disabled = false;
 
         //resets Score
         document.querySelector('#current-score').innerHTML = "Current Score: ___"
@@ -222,7 +250,7 @@
         diceValue = max;
         numOfKind += dict[max];
 
-        score = `${numOfKind} of a kind ${diceValue}s`
+        score = `${numOfKind} of a kind, ${diceValue}s`;
         return score;
       }
 
@@ -241,34 +269,37 @@
         <li>After each turn the player can decide which dice they would like reroll by using the checkboxes below</li>
         <li>The object of the game is to have the highest score after 3 turns</li>
         <li>5 of a kind is best, followed by 4 of a kind, then 3 of a kind and so on </li>
-        <li>For equal sized sets of dice, the set of dice with the higher value wins (e.g. 4 3's would beat 4 2's)</li>
+        <li>For equal sized sets of dice, the set of dice with the higher value wins (e.g. 4 of a kind, 3's would beat 4 of a kind, 2's)</li>
         <li>1's are wild meaning they can be used as any number</li>
       </ul>
     </fieldset>
 
     <div class="container-fluid">
 
+      <p id="current-score"> Current Score: ___ </p>
+      <hr>
+
       <div class="row">
         <div class="col-sm">
           Roll Selected Dice
         </div>
-        <div class="col-sm">
-          Reset Game
-        </div>
         <div class="col-sm" id="roll-number">
            Remaining rolls: 3
+        </div>
+        <div class="col-sm">
+          Reset Game
         </div>
       </div>
 
       <div class="row" id="button-row">
         <div class="col-sm">
-          <button type="button" class="btn btn-primary" onclick="rollTurn()">Roll</button>
+          <button type="button" class="btn btn-primary" onclick="rollTurn()" id="rollButton">Roll</button>
+        </div>
+        <div class="col-sm">
+           <button type="button" class="btn btn-secondary" onclick="finish()" id="finishButton" disabled>Finish</button>
         </div>
         <div class="col-sm">
           <button type="button" class="btn btn-danger" onclick="reset()">Reset</button>
-        </div>
-        <div class="col-sm" id="current-score">
-           Current Score: ___
         </div>
       </div>
 
