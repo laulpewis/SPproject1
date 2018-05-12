@@ -7,7 +7,7 @@
     <style>
       h1, h4, h6 {
         text-align: center;
-        margin: 30px;
+        margin: 20px;
       }
 
       .col-sm, col-sm-2 {
@@ -44,6 +44,7 @@
       .container-fluid {
         width: 80%;
         margin: auto;
+        margin-bottom: 10px;
       }
       img {
         /* because I was too lazy to find white dice instead of tranparent ones*/
@@ -53,13 +54,15 @@
       #rules {
         font-size: 30px;
       }
+      #player1, #player2 {
+        font-size: 18px;
+      }
 
     </style>
 
     <script>
 
-      //tracks number of rolls the player has taken
-      var rollsLeft = 3;
+      var playernum = 0;
 
       //define dice object
       function Dice() {
@@ -98,35 +101,45 @@
         }
       }
 
+      function Player() {
+        this.rollsLeft = 3;
+        this.name = `Player${++playernum}`;
+        this.playerDice = new Array(new Dice(), new Dice(), new Dice(), new Dice(), new Dice());
+      }
+      Player.prototype.getRollsLeft = function() {
+        return this.rollsLeft;
+      }
+      Player.prototype.getPlayerDice = function() {
+        return this.playerDice;
+      }
+      Player.prototype.getName = function(){
+        return this.name;
+      }
 
-
-      //create an array of dice
-      var arr = new Array(new Dice(), new Dice(), new Dice(), new Dice(), new Dice());
-
-      //triggers when user presses roll button
-      function rollTurn() {
-        if(rollsLeft > 0){
+      Player.prototype.rollTurn = function() {
+        console.log(this.getRollsLeft());
+        if(this.getRollsLeft() > 0){
           //updates roll number
-          rollsLeft--;
-          for (i=0; i<arr.length; i++){
-            document.getElementById(`check${i}`).disabled = false;
+          this.rollsLeft--;
+          for (i=0; i<this.getPlayerDice().length; i++){
+            document.getElementById(`${this.getName}check${i}`).disabled = false;
           }
-          var str = "Remaining rolls: " + rollsLeft;
-          document.querySelector('#roll-number').innerHTML = str;
+          var str = "Remaining rolls: " + this.rollsLeft;
+          document.querySelector("#roll-number").innerHTML = str;
 
           //roll selected dice
-          for (i=0; i<arr.length; i++){
+          for (i=0; i<this.getPlayerDice().length; i++){
             if(document.getElementById(`check${i}`).checked === true){
-              arr[i].roll();
-              document.getElementById(`imgDice${i}`).src = arr[i].getImg();
+              this.getPlayerDice[i].roll();
+              document.getElementById(`imgDice${i}`).src = this.getPlayerDice[i].getImg();
               // console.log(arr[i].getValue());
               // console.log(arr[i].getImg());
             }
           }
 
           //locks all dice
-          if(rollsLeft === 0){
-            for(i=0; i<arr.length; i++){
+          if(this.getRollsLeft === 0){
+            for(i=0; i<this.getPlayerDice.length; i++){
               document.getElementById(`check${i}`).checked = false;
               document.getElementById(`check${i}`).disabled = true;
               lock(`check${i}`, `lock${i}`);
@@ -146,10 +159,20 @@
         }
 
       }
+      //
+      // //create an array of dice
+      // var arr0 = new Array(new Dice(), new Dice(), new Dice(), new Dice(), new Dice());
+      // var arr1 = new Array(new Dice(), new Dice(), new Dice(), new Dice(), new Dice());
+
+      var player1 = new Player();
+      var player2 = new Player();
+
+      //triggers when user presses roll button
+
 
       //adds lock emoji when checkbox is checked
       function lock(thecheckbox, text) {
-        //console.log(checkbox);
+        console.log(thecheckbox);
         var checkboxvar = document.getElementById(thecheckbox);
         if(!document.getElementById(thecheckbox).checked){
           document.getElementById(text).innerHTML = "🔒";
@@ -206,7 +229,10 @@
       </ul>
     </fieldset>
 
-    <div class="container-fluid">
+    <div class="container-fluid" id="container1">
+
+      <p id="player1"> Player 1 </p>
+      <hr>
 
       <div class="row">
         <div class="col-sm">
@@ -222,10 +248,122 @@
 
       <div class="row" id="button-row">
         <div class="col-sm">
-          <button type="button" class="btn btn-primary" onclick="rollTurn()">Roll</button>
+          <button type="button" class="btn btn-primary" onclick="player1.rollTurn()">Roll</button>
         </div>
         <div class="col-sm">
           <button type="button" class="btn btn-danger" onclick="reset()">Reset</button>
+        </div>
+        <div class="col-sm" id="current-score">
+           Current Score: ___
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm"></div>
+
+        <div class="col-sm-2">
+          <p id="lock0">_</p>
+        </div>
+        <div class="col-sm-2">
+          <p id="lock1">_</p>
+        </div>
+        <div class="col-sm-2">
+          <p id="lock2">_</p>
+        </div>
+        <div class="col-sm-2">
+          <p id="lock3">_</p>
+        </div>
+        <div class="col-sm-2">
+          <p id="lock4">_</p>
+        </div>
+
+        <div class="col-sm"></div>
+      </div>
+
+      <div class="row" id="dicerow">
+        <div class="col-sm"></div>
+
+        <div class="col-sm-2">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg" width="70px" id="imgDice0">
+        </div>
+        <div class="col-sm-2">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg" width="70px" id="imgDice1">
+        </div>
+        <div class="col-sm-2">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg" width="70px" id="imgDice2">
+        </div>
+        <div class="col-sm-2">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg" width="70px" id="imgDice3">
+        </div>
+        <div class="col-sm-2">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Dice-0.svg" width="70px" id="imgDice4">
+        </div>
+
+        <div class="col-sm"></div>
+      </div>
+
+      <div class="row" id="checkrow">
+        <div class="col-sm"></div>
+
+        <div class="col-sm-2">
+          <form>
+            <label for="Player1check0">Reroll</label>
+            <input type="checkbox" checked disabled id="Player1check0" onchange="lock('Player1check0', 'lock0')">
+          </form>
+        </div>
+        <div class="col-sm-2">
+          <form>
+            <label for="Player1check1">Reroll</label>
+            <input type="checkbox" checked disabled id="Player1check1" onchange="lock('Player1check1', 'lock0')">
+          </form>
+        </div>
+        <div class="col-sm-2">
+          <form>
+            <label for="Player1check2">Reroll</label>
+            <input type="checkbox" checked disabled id="Player1check2" onchange="lock('Player1check2', 'lock0')">
+          </form>
+        </div>
+        <div class="col-sm-2">
+          <form>
+            <label for="Player1check3">Reroll</label>
+            <input type="checkbox" checked disabled id="Player1check3" onchange="lock('Player1check3', 'lock0')">
+          </form>
+        </div>
+        <div class="col-sm-2">
+          <form>
+            <label for="Player1check4">Reroll</label>
+            <input type="checkbox" checked disabled id="Player1check4" onchange="lock('Player1check4', 'lock0')">
+          </form>
+        </div>
+
+        <div class="col-sm"></div>
+      </div>
+
+    </div>
+
+    <div class="container-fluid" id="container2">
+
+      <p id="player2"> Player 2 </p>
+      <hr>
+
+      <div class="row">
+        <div class="col-sm">
+          Roll Selected Dice
+        </div>
+        <div class="col-sm">
+          Reset Game
+        </div>
+        <div class="col-sm" id="roll-number">
+           Remaining rolls: 3
+        </div>
+      </div>
+
+      <div class="row" id="button-row">
+        <div class="col-sm">
+          <button type="button" class="btn btn-primary" onclick="player2.rollTurn()">Roll</button>
+        </div>
+        <div class="col-sm">
+          <button type="button" class="btn btn-danger" onclick="reset('player1')">Reset</button>
         </div>
         <div class="col-sm" id="current-score">
            Current Score: ___
